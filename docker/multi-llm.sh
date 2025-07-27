@@ -34,9 +34,13 @@ EXAMPLES:
     $0 status                   # Check service status
 
 ACCESS POINTS:
-    OpenAI UI:  http://localhost:3001
-    Groq UI:    http://localhost:3002  
-    Ollama UI:  http://localhost:3003
+    OpenAI UI:      http://localhost:3001
+    Groq UI:        http://localhost:3002  
+    Ollama UI:      http://localhost:3003
+    GPT-4o-mini:    http://localhost:1041
+    GPT-4o-mini Alt: http://localhost:1004
+    GPT-4o:         http://localhost:1003
+    Claude Sonnet:  http://localhost:2004
 
 EOF
 }
@@ -95,9 +99,13 @@ case $COMMAND in
         echo "✅ Services started successfully!"
         echo ""
         echo "🌐 Access points:"
-        echo "   OpenAI UI:  http://localhost:3001"
-        echo "   Groq UI:    http://localhost:3002"
-        echo "   Ollama UI:  http://localhost:3003"
+        echo "   OpenAI UI:      http://localhost:3001"
+        echo "   Groq UI:        http://localhost:3002"
+        echo "   Ollama UI:      http://localhost:3003"
+        echo "   GPT-4o-mini:    http://localhost:1041"
+        echo "   GPT-4o-mini Alt: http://localhost:1004"
+        echo "   GPT-4o:         http://localhost:1003"
+        echo "   Claude Sonnet:  http://localhost:2004"
         echo ""
         echo "📋 Use '$0 logs' to monitor logs"
         echo "📋 Use '$0 status' to check service status"

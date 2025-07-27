@@ -5,9 +5,14 @@ This setup allows you to run multiple AI service containers with different LLM c
 ## Architecture
 
 ```
+┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
+│   UI (OpenAI)   │  │   UI (Groq)     │  │  UI (Ollama)    │  │ UI (GPT-4o-mini)│
+│   Port: 3001    │  │   Port: 3002    │  │   Port: 3003    │  │   Port: 1041    │
+└─────────────────┘  └─────────────────┘  └─────────────────┘  └─────────────────┘
+
 ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
-│   UI (OpenAI)   │  │   UI (Groq)     │  │  UI (Ollama)    │
-│   Port: 3001    │  │   Port: 3002    │  │   Port: 3003    │
+│GPT-4o-mini Alt  │  │   UI (GPT-4o)   │  │  UI (Claude)    │
+│   Port: 1004    │  │   Port: 1003    │  │   Port: 2004    │
 └─────────────────┘  └─────────────────┘  └─────────────────┘
          │                     │                     │
          ▼                     ▼                     ▼
@@ -15,9 +20,14 @@ This setup allows you to run multiple AI service containers with different LLM c
 │ AI Svc (OpenAI) │  │ AI Svc (Groq)   │  │ AI Svc (Ollama) │
 │   Port: 5555    │  │   Port: 5556    │  │   Port: 5557    │
 └─────────────────┘  └─────────────────┘  └─────────────────┘
-         │                     │                     │
-         └─────────────────────┼─────────────────────┘
-                               ▼
+
+┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
+│AI Svc(GPT-4o-mini)│ │AI Svc(GPT-4o-mini│  │ AI Svc (GPT-4o) │  │ AI Svc (Claude) │
+│   Port: 5558    │  │  Alt) Port: 5559│  │   Port: 5560    │  │   Port: 5561    │
+└─────────────────┘  └─────────────────┘  └─────────────────┘  └─────────────────┘
+         │                     │                     │                     │
+         └─────────────────────┼─────────────────────┼─────────────────────┘
+                               ▼                     ▼
                     ┌─────────────────┐
                     │ Shared Backend  │
                     │                 │
@@ -30,7 +40,7 @@ This setup allows you to run multiple AI service containers with different LLM c
 
 ## Features
 
-- **Three LLM Configurations**: OpenAI, Groq, and Ollama
+- **Seven LLM Configurations**: OpenAI, Groq, Ollama, GPT-4o-mini, GPT-4o-mini Alt, GPT-4o, and Claude
 - **Shared Backend**: Same database, query engine, and vector store
 - **Isolated UI Instances**: Each UI connects to a specific AI service
 - **Easy Comparison**: Test the same queries across different LLMs
@@ -42,8 +52,9 @@ This setup allows you to run multiple AI service containers with different LLM c
 
 - Docker and Docker Compose installed
 - API keys for the services you want to test:
-  - OpenAI API key (for OpenAI configuration)
+  - OpenAI API key (for OpenAI and GPT configurations)
   - Groq API key (for Groq configuration)
+  - Anthropic API key (for Claude configuration)
   - Ollama running locally (for Ollama configuration)
 
 ### 2. Setup Environment
@@ -60,6 +71,7 @@ Edit `docker/.env` and add your API keys:
 # Add your API keys
 OPENAI_API_KEY=your_openai_api_key_here
 GROQ_API_KEY=your_groq_api_key_here
+ANTHROPIC_API_KEY=your_anthropic_api_key_here
 
 # Generate a UUID for telemetry (optional)
 USER_UUID=your_uuid_here
@@ -79,6 +91,10 @@ Once all services are running, you can access the different UI instances:
 - **OpenAI UI**: http://localhost:3001
 - **Groq UI**: http://localhost:3002  
 - **Ollama UI**: http://localhost:3003
+- **GPT-4o-mini UI**: http://localhost:1041
+- **GPT-4o-mini Alt UI**: http://localhost:1004
+- **GPT-4o UI**: http://localhost:1003
+- **Claude Sonnet UI**: http://localhost:2004
 
 ## Configuration Files
 
@@ -87,13 +103,17 @@ Each LLM provider has its own configuration file:
 - `config.openai.yaml`: OpenAI GPT models (gpt-4o-mini, gpt-4o)
 - `config.groq.yaml`: Groq models (llama-3.3-70b-specdec, llama-3.1-8b-instant)  
 - `config.ollama.yaml`: Local Ollama models (phi4:14b, llama3.2:latest)
+- `config.gpt-4o-mini.yaml`: GPT-4o-mini focused configuration
+- `config.gpt-4o-mini-alt.yaml`: Alternative GPT-4o-mini configuration with different settings
+- `config.gpt-4o.yaml`: GPT-4o focused configuration 
+- `config.claude.yaml`: Claude 3.5 Sonnet configuration
 
 ## Port Configuration
 
-| Service | OpenAI | Groq | Ollama |
-|---------|--------|------|--------|
-| UI | 3001 | 3002 | 3003 |
-| AI Service | 5555 | 5556 | 5557 |
+| Service | OpenAI | Groq | Ollama | GPT-4o-mini | GPT-4o-mini Alt | GPT-4o | Claude |
+|---------|--------|------|--------|-------------|-----------------|--------|--------|
+| UI | 3001 | 3002 | 3003 | 1041 | 1004 | 1003 | 2004 |
+| AI Service | 5555 | 5556 | 5557 | 5558 | 5559 | 5560 | 5561 |
 
 Shared services:
 - Wren Engine: 8080
