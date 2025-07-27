@@ -43,7 +43,7 @@ models:
 ---
 type: engine
 provider: wren_ui
-endpoint: http://wren-ui-gpt-o4-mini:3000
+endpoint: http://wren-engine:8080
 
 ---
 type: engine
@@ -57,6 +57,7 @@ location: http://qdrant:6333
 embedding_model_dim: 3072
 timeout: 120
 recreate_index: true
+collection_prefix: gpt_o4_mini
 
 ---
 type: pipeline

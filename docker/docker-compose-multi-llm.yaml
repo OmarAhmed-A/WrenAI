@@ -18,6 +18,12 @@ services:
     command: /bin/sh /app/init.sh
     networks:
       - wren
+    healthcheck:
+      test: ["CMD", "test", "-f", "/app/data/config.properties"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
 
   wren-engine:
     image: ghcr.io/canner/wren-engine:${WREN_ENGINE_VERSION}
@@ -32,7 +38,14 @@ services:
     networks:
       - wren
     depends_on:
-      - bootstrap
+      bootstrap:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${WREN_ENGINE_PORT}/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
 
   ibis-server:
     image: ghcr.io/canner/wren-engine-ibis:${IBIS_SERVER_VERSION}
@@ -46,6 +59,15 @@ services:
       - ${LOCAL_STORAGE:-.}:/usr/src/app/data
     networks:
       - wren
+    depends_on:
+      wren-engine:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${IBIS_SERVER_PORT}/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
 
   qdrant:
     image: qdrant/qdrant:v1.11.0
@@ -57,6 +79,12 @@ services:
       - data:/qdrant/storage
     networks:
       - wren
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6333/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
 
   # GPT-4.1-mini AI Service
   wren-ai-service-gpt-4.1-mini:
@@ -70,15 +98,30 @@ services:
     environment:
       PYTHONUNBUFFERED: 1
       CONFIG_PATH: /app/config.yaml
+      WREN_AI_SERVICE_PORT: ${WREN_AI_SERVICE_PORT_GPT_4_1_MINI}
+      QDRANT_HOST: qdrant
+      SHOULD_FORCE_DEPLOY: 0
     env_file:
       - ${PROJECT_DIR}/.env
     volumes:
       - ${PROJECT_DIR}/config.gpt-4.1-mini.yaml:/app/config.yaml:ro
       - ${PROJECT_DIR}/data:/app/data:ro
+      - data:/app/data
     networks:
       - wren
     depends_on:
-      - qdrant
+      bootstrap:
+        condition: service_healthy
+      qdrant:
+        condition: service_healthy
+      wren-engine:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${WREN_AI_SERVICE_PORT_GPT_4_1_MINI}/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
     container_name: wren-ai-service-gpt-4.1-mini
 
   # GPT-o4-mini AI Service
@@ -93,15 +136,30 @@ services:
     environment:
       PYTHONUNBUFFERED: 1
       CONFIG_PATH: /app/config.yaml
+      WREN_AI_SERVICE_PORT: ${WREN_AI_SERVICE_PORT_GPT_O4_MINI}
+      QDRANT_HOST: qdrant
+      SHOULD_FORCE_DEPLOY: 0
     env_file:
       - ${PROJECT_DIR}/.env
     volumes:
       - ${PROJECT_DIR}/config.gpt-o4-mini.yaml:/app/config.yaml:ro
       - ${PROJECT_DIR}/data:/app/data:ro
+      - data:/app/data
     networks:
       - wren
     depends_on:
-      - qdrant
+      bootstrap:
+        condition: service_healthy
+      qdrant:
+        condition: service_healthy
+      wren-engine:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${WREN_AI_SERVICE_PORT_GPT_O4_MINI}/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
     container_name: wren-ai-service-gpt-o4-mini
 
   # GPT-o3 AI Service
@@ -116,15 +174,30 @@ services:
     environment:
       PYTHONUNBUFFERED: 1
       CONFIG_PATH: /app/config.yaml
+      WREN_AI_SERVICE_PORT: ${WREN_AI_SERVICE_PORT_GPT_O3}
+      QDRANT_HOST: qdrant
+      SHOULD_FORCE_DEPLOY: 0
     env_file:
       - ${PROJECT_DIR}/.env
     volumes:
       - ${PROJECT_DIR}/config.gpt-o3.yaml:/app/config.yaml:ro
       - ${PROJECT_DIR}/data:/app/data:ro
+      - data:/app/data
     networks:
       - wren
     depends_on:
-      - qdrant
+      bootstrap:
+        condition: service_healthy
+      qdrant:
+        condition: service_healthy
+      wren-engine:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${WREN_AI_SERVICE_PORT_GPT_O3}/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
     container_name: wren-ai-service-gpt-o3
 
   # Claude Sonnet 4 AI Service
@@ -139,15 +212,30 @@ services:
     environment:
       PYTHONUNBUFFERED: 1
       CONFIG_PATH: /app/config.yaml
+      WREN_AI_SERVICE_PORT: ${WREN_AI_SERVICE_PORT_CLAUDE_SONNET_4}
+      QDRANT_HOST: qdrant
+      SHOULD_FORCE_DEPLOY: 0
     env_file:
       - ${PROJECT_DIR}/.env
     volumes:
       - ${PROJECT_DIR}/config.claude-sonnet-4.yaml:/app/config.yaml:ro
       - ${PROJECT_DIR}/data:/app/data:ro
+      - data:/app/data
     networks:
       - wren
     depends_on:
-      - qdrant
+      bootstrap:
+        condition: service_healthy
+      qdrant:
+        condition: service_healthy
+      wren-engine:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${WREN_AI_SERVICE_PORT_CLAUDE_SONNET_4}/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
     container_name: wren-ai-service-claude-sonnet-4
 
   # GPT-4.1-mini UI
@@ -186,8 +274,10 @@ services:
     networks:
       - wren
     depends_on:
-      - wren-ai-service-gpt-4.1-mini
-      - wren-engine
+      wren-ai-service-gpt-4.1-mini:
+        condition: service_healthy
+      wren-engine:
+        condition: service_started
     container_name: wren-ui-gpt-4.1-mini
 
   # GPT-o4-mini UI
@@ -226,8 +316,10 @@ services:
     networks:
       - wren
     depends_on:
-      - wren-ai-service-gpt-o4-mini
-      - wren-engine
+      wren-ai-service-gpt-o4-mini:
+        condition: service_healthy
+      wren-engine:
+        condition: service_started
     container_name: wren-ui-gpt-o4-mini
 
   # GPT-o3 UI
@@ -266,8 +358,10 @@ services:
     networks:
       - wren
     depends_on:
-      - wren-ai-service-gpt-o3
-      - wren-engine
+      wren-ai-service-gpt-o3:
+        condition: service_healthy
+      wren-engine:
+        condition: service_started
     container_name: wren-ui-gpt-o3
 
   # Claude Sonnet 4 UI
@@ -306,6 +400,8 @@ services:
     networks:
       - wren
     depends_on:
-      - wren-ai-service-claude-sonnet-4
-      - wren-engine
+      wren-ai-service-claude-sonnet-4:
+        condition: service_healthy
+      wren-engine:
+        condition: service_started
     container_name: wren-ui-claude-sonnet-4

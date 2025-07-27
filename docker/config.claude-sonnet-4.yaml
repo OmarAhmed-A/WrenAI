@@ -21,7 +21,7 @@ models:
 ---
 type: engine
 provider: wren_ui
-endpoint: http://wren-ui-claude-sonnet-4:3000
+endpoint: http://wren-engine:8080
 
 ---
 type: engine
@@ -32,9 +32,10 @@ endpoint: http://ibis-server:8000
 type: document_store
 provider: qdrant
 location: http://qdrant:6333
-embedding_model_dim: 3072
+embedding_model_dim: 1536
 timeout: 120
 recreate_index: true
+collection_prefix: claude_sonnet_4
 
 ---
 type: pipeline
