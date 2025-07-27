@@ -58,169 +58,100 @@ services:
     networks:
       - wren
 
-  # OpenAI AI Service
-  wren-ai-service-openai:
+  # GPT-4.1-mini AI Service
+  wren-ai-service-gpt-4.1-mini:
     image: ghcr.io/canner/wren-ai-service:${WREN_AI_SERVICE_VERSION}
     restart: on-failure
     platform: ${PLATFORM}
     expose:
-      - ${WREN_AI_SERVICE_PORT_OPENAI}
+      - ${WREN_AI_SERVICE_PORT_GPT_4_1_MINI}
     ports:
-      - ${AI_SERVICE_FORWARD_PORT_OPENAI}:${WREN_AI_SERVICE_PORT_OPENAI}
+      - ${AI_SERVICE_FORWARD_PORT_GPT_4_1_MINI}:${WREN_AI_SERVICE_PORT_GPT_4_1_MINI}
     environment:
       PYTHONUNBUFFERED: 1
       CONFIG_PATH: /app/config.yaml
     env_file:
       - ${PROJECT_DIR}/.env
     volumes:
-      - ${PROJECT_DIR}/config.openai.yaml:/app/config.yaml:ro
+      - ${PROJECT_DIR}/config.gpt-4.1-mini.yaml:/app/config.yaml:ro
       - ${PROJECT_DIR}/data:/app/data:ro
     networks:
       - wren
     depends_on:
       - qdrant
-    container_name: wren-ai-service-openai
+    container_name: wren-ai-service-gpt-4.1-mini
 
-  # Groq AI Service
-  wren-ai-service-groq:
+  # GPT-o4-mini AI Service
+  wren-ai-service-gpt-o4-mini:
     image: ghcr.io/canner/wren-ai-service:${WREN_AI_SERVICE_VERSION}
     restart: on-failure
     platform: ${PLATFORM}
     expose:
-      - ${WREN_AI_SERVICE_PORT_GROQ}
+      - ${WREN_AI_SERVICE_PORT_GPT_O4_MINI}
     ports:
-      - ${AI_SERVICE_FORWARD_PORT_GROQ}:${WREN_AI_SERVICE_PORT_GROQ}
+      - ${AI_SERVICE_FORWARD_PORT_GPT_O4_MINI}:${WREN_AI_SERVICE_PORT_GPT_O4_MINI}
     environment:
       PYTHONUNBUFFERED: 1
       CONFIG_PATH: /app/config.yaml
     env_file:
       - ${PROJECT_DIR}/.env
     volumes:
-      - ${PROJECT_DIR}/config.groq.yaml:/app/config.yaml:ro
+      - ${PROJECT_DIR}/config.gpt-o4-mini.yaml:/app/config.yaml:ro
       - ${PROJECT_DIR}/data:/app/data:ro
     networks:
       - wren
     depends_on:
       - qdrant
-    container_name: wren-ai-service-groq
+    container_name: wren-ai-service-gpt-o4-mini
 
-  # Ollama AI Service
-  wren-ai-service-ollama:
+  # GPT-o3 AI Service
+  wren-ai-service-gpt-o3:
     image: ghcr.io/canner/wren-ai-service:${WREN_AI_SERVICE_VERSION}
     restart: on-failure
     platform: ${PLATFORM}
     expose:
-      - ${WREN_AI_SERVICE_PORT_OLLAMA}
+      - ${WREN_AI_SERVICE_PORT_GPT_O3}
     ports:
-      - ${AI_SERVICE_FORWARD_PORT_OLLAMA}:${WREN_AI_SERVICE_PORT_OLLAMA}
+      - ${AI_SERVICE_FORWARD_PORT_GPT_O3}:${WREN_AI_SERVICE_PORT_GPT_O3}
     environment:
       PYTHONUNBUFFERED: 1
       CONFIG_PATH: /app/config.yaml
     env_file:
       - ${PROJECT_DIR}/.env
     volumes:
-      - ${PROJECT_DIR}/config.ollama.yaml:/app/config.yaml:ro
+      - ${PROJECT_DIR}/config.gpt-o3.yaml:/app/config.yaml:ro
       - ${PROJECT_DIR}/data:/app/data:ro
     networks:
       - wren
     depends_on:
       - qdrant
-    container_name: wren-ai-service-ollama
+    container_name: wren-ai-service-gpt-o3
 
-  # GPT-4o-mini AI Service
-  wren-ai-service-gpt-4o-mini:
+  # Claude Sonnet 4 AI Service
+  wren-ai-service-claude-sonnet-4:
     image: ghcr.io/canner/wren-ai-service:${WREN_AI_SERVICE_VERSION}
     restart: on-failure
     platform: ${PLATFORM}
     expose:
-      - ${WREN_AI_SERVICE_PORT_GPT_4O_MINI}
+      - ${WREN_AI_SERVICE_PORT_CLAUDE_SONNET_4}
     ports:
-      - ${AI_SERVICE_FORWARD_PORT_GPT_4O_MINI}:${WREN_AI_SERVICE_PORT_GPT_4O_MINI}
+      - ${AI_SERVICE_FORWARD_PORT_CLAUDE_SONNET_4}:${WREN_AI_SERVICE_PORT_CLAUDE_SONNET_4}
     environment:
       PYTHONUNBUFFERED: 1
       CONFIG_PATH: /app/config.yaml
     env_file:
       - ${PROJECT_DIR}/.env
     volumes:
-      - ${PROJECT_DIR}/config.gpt-4o-mini.yaml:/app/config.yaml:ro
+      - ${PROJECT_DIR}/config.claude-sonnet-4.yaml:/app/config.yaml:ro
       - ${PROJECT_DIR}/data:/app/data:ro
     networks:
       - wren
     depends_on:
       - qdrant
-    container_name: wren-ai-service-gpt-4o-mini
+    container_name: wren-ai-service-claude-sonnet-4
 
-  # GPT-4o-mini Alt AI Service
-  wren-ai-service-gpt-4o-mini-alt:
-    image: ghcr.io/canner/wren-ai-service:${WREN_AI_SERVICE_VERSION}
-    restart: on-failure
-    platform: ${PLATFORM}
-    expose:
-      - ${WREN_AI_SERVICE_PORT_GPT_4O_MINI_ALT}
-    ports:
-      - ${AI_SERVICE_FORWARD_PORT_GPT_4O_MINI_ALT}:${WREN_AI_SERVICE_PORT_GPT_4O_MINI_ALT}
-    environment:
-      PYTHONUNBUFFERED: 1
-      CONFIG_PATH: /app/config.yaml
-    env_file:
-      - ${PROJECT_DIR}/.env
-    volumes:
-      - ${PROJECT_DIR}/config.gpt-4o-mini-alt.yaml:/app/config.yaml:ro
-      - ${PROJECT_DIR}/data:/app/data:ro
-    networks:
-      - wren
-    depends_on:
-      - qdrant
-    container_name: wren-ai-service-gpt-4o-mini-alt
-
-  # GPT-4o AI Service
-  wren-ai-service-gpt-4o:
-    image: ghcr.io/canner/wren-ai-service:${WREN_AI_SERVICE_VERSION}
-    restart: on-failure
-    platform: ${PLATFORM}
-    expose:
-      - ${WREN_AI_SERVICE_PORT_GPT_4O}
-    ports:
-      - ${AI_SERVICE_FORWARD_PORT_GPT_4O}:${WREN_AI_SERVICE_PORT_GPT_4O}
-    environment:
-      PYTHONUNBUFFERED: 1
-      CONFIG_PATH: /app/config.yaml
-    env_file:
-      - ${PROJECT_DIR}/.env
-    volumes:
-      - ${PROJECT_DIR}/config.gpt-4o.yaml:/app/config.yaml:ro
-      - ${PROJECT_DIR}/data:/app/data:ro
-    networks:
-      - wren
-    depends_on:
-      - qdrant
-    container_name: wren-ai-service-gpt-4o
-
-  # Claude AI Service
-  wren-ai-service-claude:
-    image: ghcr.io/canner/wren-ai-service:${WREN_AI_SERVICE_VERSION}
-    restart: on-failure
-    platform: ${PLATFORM}
-    expose:
-      - ${WREN_AI_SERVICE_PORT_CLAUDE}
-    ports:
-      - ${AI_SERVICE_FORWARD_PORT_CLAUDE}:${WREN_AI_SERVICE_PORT_CLAUDE}
-    environment:
-      PYTHONUNBUFFERED: 1
-      CONFIG_PATH: /app/config.yaml
-    env_file:
-      - ${PROJECT_DIR}/.env
-    volumes:
-      - ${PROJECT_DIR}/config.claude.yaml:/app/config.yaml:ro
-      - ${PROJECT_DIR}/data:/app/data:ro
-    networks:
-      - wren
-    depends_on:
-      - qdrant
-    container_name: wren-ai-service-claude
-
-  # OpenAI UI
-  wren-ui-openai:
+  # GPT-4.1-mini UI
+  wren-ui-gpt-4.1-mini:
     image: ghcr.io/canner/wren-ui:${WREN_UI_VERSION}
     restart: on-failure
     platform: ${PLATFORM}
@@ -228,9 +159,9 @@ services:
       DB_TYPE: sqlite
       SQLITE_FILE: /app/data/db.sqlite3
       WREN_ENGINE_ENDPOINT: http://wren-engine:${WREN_ENGINE_PORT}
-      WREN_AI_ENDPOINT: http://wren-ai-service-openai:${WREN_AI_SERVICE_PORT_OPENAI}
+      WREN_AI_ENDPOINT: http://wren-ai-service-gpt-4.1-mini:${WREN_AI_SERVICE_PORT_GPT_4_1_MINI}
       IBIS_SERVER_ENDPOINT: http://ibis-server:${IBIS_SERVER_PORT}
-      GENERATION_MODEL: ${GENERATION_MODEL_OPENAI}
+      GENERATION_MODEL: ${GENERATION_MODEL_GPT_4_1_MINI}
       # telemetry
       WREN_ENGINE_PORT: ${WREN_ENGINE_PORT}
       WREN_AI_SERVICE_VERSION: ${WREN_AI_SERVICE_VERSION}
@@ -249,18 +180,18 @@ services:
       # configs
       WREN_PRODUCT_VERSION: ${WREN_PRODUCT_VERSION}
     ports:
-      - ${HOST_PORT_OPENAI}:3000
+      - ${HOST_PORT_GPT_4_1_MINI}:3000
     volumes:
       - data:/app/data
     networks:
       - wren
     depends_on:
-      - wren-ai-service-openai
+      - wren-ai-service-gpt-4.1-mini
       - wren-engine
-    container_name: wren-ui-openai
+    container_name: wren-ui-gpt-4.1-mini
 
-  # Groq UI
-  wren-ui-groq:
+  # GPT-o4-mini UI
+  wren-ui-gpt-o4-mini:
     image: ghcr.io/canner/wren-ui:${WREN_UI_VERSION}
     restart: on-failure
     platform: ${PLATFORM}
@@ -268,9 +199,9 @@ services:
       DB_TYPE: sqlite
       SQLITE_FILE: /app/data/db.sqlite3
       WREN_ENGINE_ENDPOINT: http://wren-engine:${WREN_ENGINE_PORT}
-      WREN_AI_ENDPOINT: http://wren-ai-service-groq:${WREN_AI_SERVICE_PORT_GROQ}
+      WREN_AI_ENDPOINT: http://wren-ai-service-gpt-o4-mini:${WREN_AI_SERVICE_PORT_GPT_O4_MINI}
       IBIS_SERVER_ENDPOINT: http://ibis-server:${IBIS_SERVER_PORT}
-      GENERATION_MODEL: ${GENERATION_MODEL_GROQ}
+      GENERATION_MODEL: ${GENERATION_MODEL_GPT_O4_MINI}
       # telemetry
       WREN_ENGINE_PORT: ${WREN_ENGINE_PORT}
       WREN_AI_SERVICE_VERSION: ${WREN_AI_SERVICE_VERSION}
@@ -289,18 +220,18 @@ services:
       # configs
       WREN_PRODUCT_VERSION: ${WREN_PRODUCT_VERSION}
     ports:
-      - ${HOST_PORT_GROQ}:3000
+      - ${HOST_PORT_GPT_O4_MINI}:3000
     volumes:
       - data:/app/data
     networks:
       - wren
     depends_on:
-      - wren-ai-service-groq
+      - wren-ai-service-gpt-o4-mini
       - wren-engine
-    container_name: wren-ui-groq
+    container_name: wren-ui-gpt-o4-mini
 
-  # Ollama UI
-  wren-ui-ollama:
+  # GPT-o3 UI
+  wren-ui-gpt-o3:
     image: ghcr.io/canner/wren-ui:${WREN_UI_VERSION}
     restart: on-failure
     platform: ${PLATFORM}
@@ -308,9 +239,9 @@ services:
       DB_TYPE: sqlite
       SQLITE_FILE: /app/data/db.sqlite3
       WREN_ENGINE_ENDPOINT: http://wren-engine:${WREN_ENGINE_PORT}
-      WREN_AI_ENDPOINT: http://wren-ai-service-ollama:${WREN_AI_SERVICE_PORT_OLLAMA}
+      WREN_AI_ENDPOINT: http://wren-ai-service-gpt-o3:${WREN_AI_SERVICE_PORT_GPT_O3}
       IBIS_SERVER_ENDPOINT: http://ibis-server:${IBIS_SERVER_PORT}
-      GENERATION_MODEL: ${GENERATION_MODEL_OLLAMA}
+      GENERATION_MODEL: ${GENERATION_MODEL_GPT_O3}
       # telemetry
       WREN_ENGINE_PORT: ${WREN_ENGINE_PORT}
       WREN_AI_SERVICE_VERSION: ${WREN_AI_SERVICE_VERSION}
@@ -329,18 +260,18 @@ services:
       # configs
       WREN_PRODUCT_VERSION: ${WREN_PRODUCT_VERSION}
     ports:
-      - ${HOST_PORT_OLLAMA}:3000
+      - ${HOST_PORT_GPT_O3}:3000
     volumes:
       - data:/app/data
     networks:
       - wren
     depends_on:
-      - wren-ai-service-ollama
+      - wren-ai-service-gpt-o3
       - wren-engine
-    container_name: wren-ui-ollama
+    container_name: wren-ui-gpt-o3
 
-  # GPT-4o-mini UI
-  wren-ui-gpt-4o-mini:
+  # Claude Sonnet 4 UI
+  wren-ui-claude-sonnet-4:
     image: ghcr.io/canner/wren-ui:${WREN_UI_VERSION}
     restart: on-failure
     platform: ${PLATFORM}
@@ -348,9 +279,9 @@ services:
       DB_TYPE: sqlite
       SQLITE_FILE: /app/data/db.sqlite3
       WREN_ENGINE_ENDPOINT: http://wren-engine:${WREN_ENGINE_PORT}
-      WREN_AI_ENDPOINT: http://wren-ai-service-gpt-4o-mini:${WREN_AI_SERVICE_PORT_GPT_4O_MINI}
+      WREN_AI_ENDPOINT: http://wren-ai-service-claude-sonnet-4:${WREN_AI_SERVICE_PORT_CLAUDE_SONNET_4}
       IBIS_SERVER_ENDPOINT: http://ibis-server:${IBIS_SERVER_PORT}
-      GENERATION_MODEL: ${GENERATION_MODEL_GPT_4O_MINI}
+      GENERATION_MODEL: ${GENERATION_MODEL_CLAUDE_SONNET_4}
       # telemetry
       WREN_ENGINE_PORT: ${WREN_ENGINE_PORT}
       WREN_AI_SERVICE_VERSION: ${WREN_AI_SERVICE_VERSION}
@@ -369,132 +300,12 @@ services:
       # configs
       WREN_PRODUCT_VERSION: ${WREN_PRODUCT_VERSION}
     ports:
-      - ${HOST_PORT_GPT_4O_MINI}:3000
+      - ${HOST_PORT_CLAUDE_SONNET_4}:3000
     volumes:
       - data:/app/data
     networks:
       - wren
     depends_on:
-      - wren-ai-service-gpt-4o-mini
+      - wren-ai-service-claude-sonnet-4
       - wren-engine
-    container_name: wren-ui-gpt-4o-mini
-
-  # GPT-4o-mini Alt UI
-  wren-ui-gpt-4o-mini-alt:
-    image: ghcr.io/canner/wren-ui:${WREN_UI_VERSION}
-    restart: on-failure
-    platform: ${PLATFORM}
-    environment:
-      DB_TYPE: sqlite
-      SQLITE_FILE: /app/data/db.sqlite3
-      WREN_ENGINE_ENDPOINT: http://wren-engine:${WREN_ENGINE_PORT}
-      WREN_AI_ENDPOINT: http://wren-ai-service-gpt-4o-mini-alt:${WREN_AI_SERVICE_PORT_GPT_4O_MINI_ALT}
-      IBIS_SERVER_ENDPOINT: http://ibis-server:${IBIS_SERVER_PORT}
-      GENERATION_MODEL: ${GENERATION_MODEL_GPT_4O_MINI_ALT}
-      # telemetry
-      WREN_ENGINE_PORT: ${WREN_ENGINE_PORT}
-      WREN_AI_SERVICE_VERSION: ${WREN_AI_SERVICE_VERSION}
-      WREN_UI_VERSION: ${WREN_UI_VERSION}
-      WREN_ENGINE_VERSION: ${WREN_ENGINE_VERSION}
-      USER_UUID: ${USER_UUID}
-      POSTHOG_API_KEY: ${POSTHOG_API_KEY}
-      POSTHOG_HOST: ${POSTHOG_HOST}
-      TELEMETRY_ENABLED: ${TELEMETRY_ENABLED}
-      # client side
-      NEXT_PUBLIC_USER_UUID: ${USER_UUID}
-      NEXT_PUBLIC_POSTHOG_API_KEY: ${POSTHOG_API_KEY}
-      NEXT_PUBLIC_POSTHOG_HOST: ${POSTHOG_HOST}
-      NEXT_PUBLIC_TELEMETRY_ENABLED: ${TELEMETRY_ENABLED}
-      EXPERIMENTAL_ENGINE_RUST_VERSION: ${EXPERIMENTAL_ENGINE_RUST_VERSION}
-      # configs
-      WREN_PRODUCT_VERSION: ${WREN_PRODUCT_VERSION}
-    ports:
-      - ${HOST_PORT_GPT_4O_MINI_ALT}:3000
-    volumes:
-      - data:/app/data
-    networks:
-      - wren
-    depends_on:
-      - wren-ai-service-gpt-4o-mini-alt
-      - wren-engine
-    container_name: wren-ui-gpt-4o-mini-alt
-
-  # GPT-4o UI
-  wren-ui-gpt-4o:
-    image: ghcr.io/canner/wren-ui:${WREN_UI_VERSION}
-    restart: on-failure
-    platform: ${PLATFORM}
-    environment:
-      DB_TYPE: sqlite
-      SQLITE_FILE: /app/data/db.sqlite3
-      WREN_ENGINE_ENDPOINT: http://wren-engine:${WREN_ENGINE_PORT}
-      WREN_AI_ENDPOINT: http://wren-ai-service-gpt-4o:${WREN_AI_SERVICE_PORT_GPT_4O}
-      IBIS_SERVER_ENDPOINT: http://ibis-server:${IBIS_SERVER_PORT}
-      GENERATION_MODEL: ${GENERATION_MODEL_GPT_4O}
-      # telemetry
-      WREN_ENGINE_PORT: ${WREN_ENGINE_PORT}
-      WREN_AI_SERVICE_VERSION: ${WREN_AI_SERVICE_VERSION}
-      WREN_UI_VERSION: ${WREN_UI_VERSION}
-      WREN_ENGINE_VERSION: ${WREN_ENGINE_VERSION}
-      USER_UUID: ${USER_UUID}
-      POSTHOG_API_KEY: ${POSTHOG_API_KEY}
-      POSTHOG_HOST: ${POSTHOG_HOST}
-      TELEMETRY_ENABLED: ${TELEMETRY_ENABLED}
-      # client side
-      NEXT_PUBLIC_USER_UUID: ${USER_UUID}
-      NEXT_PUBLIC_POSTHOG_API_KEY: ${POSTHOG_API_KEY}
-      NEXT_PUBLIC_POSTHOG_HOST: ${POSTHOG_HOST}
-      NEXT_PUBLIC_TELEMETRY_ENABLED: ${TELEMETRY_ENABLED}
-      EXPERIMENTAL_ENGINE_RUST_VERSION: ${EXPERIMENTAL_ENGINE_RUST_VERSION}
-      # configs
-      WREN_PRODUCT_VERSION: ${WREN_PRODUCT_VERSION}
-    ports:
-      - ${HOST_PORT_GPT_4O}:3000
-    volumes:
-      - data:/app/data
-    networks:
-      - wren
-    depends_on:
-      - wren-ai-service-gpt-4o
-      - wren-engine
-    container_name: wren-ui-gpt-4o
-
-  # Claude UI
-  wren-ui-claude:
-    image: ghcr.io/canner/wren-ui:${WREN_UI_VERSION}
-    restart: on-failure
-    platform: ${PLATFORM}
-    environment:
-      DB_TYPE: sqlite
-      SQLITE_FILE: /app/data/db.sqlite3
-      WREN_ENGINE_ENDPOINT: http://wren-engine:${WREN_ENGINE_PORT}
-      WREN_AI_ENDPOINT: http://wren-ai-service-claude:${WREN_AI_SERVICE_PORT_CLAUDE}
-      IBIS_SERVER_ENDPOINT: http://ibis-server:${IBIS_SERVER_PORT}
-      GENERATION_MODEL: ${GENERATION_MODEL_CLAUDE}
-      # telemetry
-      WREN_ENGINE_PORT: ${WREN_ENGINE_PORT}
-      WREN_AI_SERVICE_VERSION: ${WREN_AI_SERVICE_VERSION}
-      WREN_UI_VERSION: ${WREN_UI_VERSION}
-      WREN_ENGINE_VERSION: ${WREN_ENGINE_VERSION}
-      USER_UUID: ${USER_UUID}
-      POSTHOG_API_KEY: ${POSTHOG_API_KEY}
-      POSTHOG_HOST: ${POSTHOG_HOST}
-      TELEMETRY_ENABLED: ${TELEMETRY_ENABLED}
-      # client side
-      NEXT_PUBLIC_USER_UUID: ${USER_UUID}
-      NEXT_PUBLIC_POSTHOG_API_KEY: ${POSTHOG_API_KEY}
-      NEXT_PUBLIC_POSTHOG_HOST: ${POSTHOG_HOST}
-      NEXT_PUBLIC_TELEMETRY_ENABLED: ${TELEMETRY_ENABLED}
-      EXPERIMENTAL_ENGINE_RUST_VERSION: ${EXPERIMENTAL_ENGINE_RUST_VERSION}
-      # configs
-      WREN_PRODUCT_VERSION: ${WREN_PRODUCT_VERSION}
-    ports:
-      - ${HOST_PORT_CLAUDE}:3000
-    volumes:
-      - data:/app/data
-    networks:
-      - wren
-    depends_on:
-      - wren-ai-service-claude
-      - wren-engine
-    container_name: wren-ui-claude
+    container_name: wren-ui-claude-sonnet-4

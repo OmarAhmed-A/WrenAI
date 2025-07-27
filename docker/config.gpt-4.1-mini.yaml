@@ -1,35 +1,49 @@
 type: llm
 provider: litellm_llm
-timeout: 600
+timeout: 120
 models:
-  - api_base: http://host.docker.internal:11434
-    model: ollama_chat/phi4:14b
-    alias: default
-    timeout: 600
+  - model: gpt-4.1-nano-2025-04-14
+    context_window_size: 1000000
     kwargs:
+      max_tokens: 4096
       n: 1
+      seed: 0
       temperature: 0
-  - api_base: http://host.docker.internal:11434
-    model: ollama_chat/llama3.2:latest
-    timeout: 600
+  - model: gpt-4.1-mini-2025-04-14
+    context_window_size: 1000000
     kwargs:
+      max_tokens: 4096
       n: 1
+      seed: 0
+      temperature: 0
+  - model: gpt-4.1-2025-04-14
+    context_window_size: 1000000
+    kwargs:
+      max_tokens: 4096
+      n: 1
+      seed: 0
+      temperature: 0
+  - alias: default
+    model: gpt-4.1-mini-2025-04-14
+    context_window_size: 1000000
+    kwargs:
+      max_tokens: 4096
+      n: 1
+      seed: 0
       temperature: 0
 
 ---
 type: embedder
 provider: litellm_embedder
 models:
-  # Using Ollama embedding through OpenAI compatible endpoint
-  - model: openai/nomic-embed-text
+  - model: text-embedding-3-large
     alias: default
-    api_base: http://host.docker.internal:11434/v1
-    timeout: 600
+    timeout: 120
 
 ---
 type: engine
 provider: wren_ui
-endpoint: http://wren-ui-ollama:3000
+endpoint: http://wren-ui-gpt-4.1-mini:3000
 
 ---
 type: engine
@@ -40,7 +54,7 @@ endpoint: http://ibis-server:8000
 type: document_store
 provider: qdrant
 location: http://qdrant:6333
-embedding_model_dim: 768
+embedding_model_dim: 3072
 timeout: 120
 recreate_index: true
 
@@ -158,7 +172,7 @@ settings:
   langfuse_host: https://cloud.langfuse.com
   langfuse_enable: true
   logging_level: DEBUG
-  development: true
+  development: false
   historical_question_retrieval_similarity_threshold: 0.9
   sql_pairs_similarity_threshold: 0.7
   sql_pairs_retrieval_max_size: 10

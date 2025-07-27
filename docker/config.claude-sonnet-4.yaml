@@ -2,11 +2,12 @@ type: llm
 provider: litellm_llm
 timeout: 120
 models:
-  - alias: default
-    model: claude-3-5-sonnet-20241022
-    context_window_size: 200000
+  - api_base: https://api.anthropic.com
+    model: anthropic/claude-sonnet-4-20250514
+    alias: default
+    timeout: 600
     kwargs:
-      max_tokens: 4096
+      n: 1
       temperature: 0
 
 ---
@@ -20,7 +21,7 @@ models:
 ---
 type: engine
 provider: wren_ui
-endpoint: http://wren-ui-claude:3000
+endpoint: http://wren-ui-claude-sonnet-4:3000
 
 ---
 type: engine

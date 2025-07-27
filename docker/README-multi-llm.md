@@ -6,24 +6,14 @@ This setup allows you to run multiple AI service containers with different LLM c
 
 ```
 ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
-│   UI (OpenAI)   │  │   UI (Groq)     │  │  UI (Ollama)    │  │ UI (GPT-4o-mini)│
-│   Port: 3001    │  │   Port: 3002    │  │   Port: 3003    │  │   Port: 1041    │
+│ UI (GPT-4.1-mini)│ │ UI (GPT-o4-mini)│  │   UI (GPT-o3)   │  │UI (Claude Sonnet│
+│   Port: 1041    │  │   Port: 1004    │  │   Port: 1003    │  │   4) Port: 2004 │
 └─────────────────┘  └─────────────────┘  └─────────────────┘  └─────────────────┘
-
-┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
-│GPT-4o-mini Alt  │  │   UI (GPT-4o)   │  │  UI (Claude)    │
-│   Port: 1004    │  │   Port: 1003    │  │   Port: 2004    │
-└─────────────────┘  └─────────────────┘  └─────────────────┘
-         │                     │                     │
-         ▼                     ▼                     ▼
-┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
-│ AI Svc (OpenAI) │  │ AI Svc (Groq)   │  │ AI Svc (Ollama) │
-│   Port: 5555    │  │   Port: 5556    │  │   Port: 5557    │
-└─────────────────┘  └─────────────────┘  └─────────────────┘
-
+         │                     │                     │                     │
+         ▼                     ▼                     ▼                     ▼
 ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
-│AI Svc(GPT-4o-mini)│ │AI Svc(GPT-4o-mini│  │ AI Svc (GPT-4o) │  │ AI Svc (Claude) │
-│   Port: 5558    │  │  Alt) Port: 5559│  │   Port: 5560    │  │   Port: 5561    │
+│AI Svc(GPT-4.1-  │  │AI Svc(GPT-o4-   │  │ AI Svc (GPT-o3) │  │AI Svc (Claude   │
+│  mini) Port:5555│  │  mini) Port:5556│  │   Port: 5557    │  │Sonnet 4)Port:558│
 └─────────────────┘  └─────────────────┘  └─────────────────┘  └─────────────────┘
          │                     │                     │                     │
          └─────────────────────┼─────────────────────┼─────────────────────┘
@@ -40,7 +30,7 @@ This setup allows you to run multiple AI service containers with different LLM c
 
 ## Features
 
-- **Seven LLM Configurations**: OpenAI, Groq, Ollama, GPT-4o-mini, GPT-4o-mini Alt, GPT-4o, and Claude
+- **Four LLM Configurations**: GPT-4.1-mini, GPT-o4-mini, GPT-o3, and Claude Sonnet 4
 - **Shared Backend**: Same database, query engine, and vector store
 - **Isolated UI Instances**: Each UI connects to a specific AI service
 - **Easy Comparison**: Test the same queries across different LLMs
@@ -70,7 +60,6 @@ Edit `docker/.env` and add your API keys:
 ```bash
 # Add your API keys
 OPENAI_API_KEY=your_openai_api_key_here
-GROQ_API_KEY=your_groq_api_key_here
 ANTHROPIC_API_KEY=your_anthropic_api_key_here
 
 # Generate a UUID for telemetry (optional)
@@ -88,25 +77,19 @@ docker-compose -f docker-compose-multi-llm.yaml --env-file .env up -d
 
 Once all services are running, you can access the different UI instances:
 
-- **OpenAI UI**: http://localhost:3001
-- **Groq UI**: http://localhost:3002  
-- **Ollama UI**: http://localhost:3003
-- **GPT-4o-mini UI**: http://localhost:1041
-- **GPT-4o-mini Alt UI**: http://localhost:1004
-- **GPT-4o UI**: http://localhost:1003
-- **Claude Sonnet UI**: http://localhost:2004
+- **GPT-4.1-mini UI**: http://localhost:1041
+- **GPT-o4-mini UI**: http://localhost:1004  
+- **GPT-o3 UI**: http://localhost:1003
+- **Claude Sonnet 4 UI**: http://localhost:2004
 
 ## Configuration Files
 
 Each LLM provider has its own configuration file:
 
-- `config.openai.yaml`: OpenAI GPT models (gpt-4o-mini, gpt-4o)
-- `config.groq.yaml`: Groq models (llama-3.3-70b-specdec, llama-3.1-8b-instant)  
-- `config.ollama.yaml`: Local Ollama models (phi4:14b, llama3.2:latest)
-- `config.gpt-4o-mini.yaml`: GPT-4o-mini focused configuration
-- `config.gpt-4o-mini-alt.yaml`: Alternative GPT-4o-mini configuration with different settings
-- `config.gpt-4o.yaml`: GPT-4o focused configuration 
-- `config.claude.yaml`: Claude 3.5 Sonnet configuration
+- `config.gpt-4.1-mini.yaml`: GPT-4.1-mini configuration with multiple model options
+- `config.gpt-o4-mini.yaml`: GPT-o4-mini configuration using gpt-4.1-nano-2025-04-14  
+- `config.gpt-o3.yaml`: GPT-o3 configuration using gpt-4.1-2025-04-14
+- `config.claude-sonnet-4.yaml`: Claude Sonnet 4 configuration using anthropic/claude-sonnet-4-20250514
 
 ## Port Configuration
 
@@ -120,39 +103,16 @@ Shared services:
 - Qdrant: 6333
 - Ibis Server: 8000
 
-## Special Setup for Ollama
-
-For Ollama to work properly:
-
-1. **Install and run Ollama locally**:
-   ```bash
-   # Install Ollama (macOS/Linux)
-   curl -fsSL https://ollama.ai/install.sh | sh
-   
-   # Start Ollama service
-   ollama serve
-   ```
-
-2. **Pull required models**:
-   ```bash
-   ollama pull phi4:14b
-   ollama pull llama3.2:latest
-   ollama pull nomic-embed-text
-   ```
-
-3. **For Linux users**: The configuration uses `host.docker.internal:11434`. If you're on Linux, you may need to:
-   - Use your actual IP address instead of `host.docker.internal`
-   - Or run Ollama in a Docker container and adjust the network configuration
-
 ## Testing and Comparison
 
 1. **Load your data** through any of the UI instances (they all share the same backend)
 2. **Ask the same questions** across different UIs to compare responses
 3. **Monitor performance** by checking the different AI service logs:
    ```bash
-   docker-compose -f docker-compose-multi-llm.yaml logs wren-ai-service-openai
-   docker-compose -f docker-compose-multi-llm.yaml logs wren-ai-service-groq
-   docker-compose -f docker-compose-multi-llm.yaml logs wren-ai-service-ollama
+   docker-compose -f docker-compose-multi-llm.yaml logs wren-ai-service-gpt-4.1-mini
+   docker-compose -f docker-compose-multi-llm.yaml logs wren-ai-service-gpt-o4-mini
+   docker-compose -f docker-compose-multi-llm.yaml logs wren-ai-service-gpt-o3
+   docker-compose -f docker-compose-multi-llm.yaml logs wren-ai-service-claude-sonnet-4
    ```
 
 ## Troubleshooting
@@ -163,12 +123,7 @@ For Ollama to work properly:
 
 2. **API key issues**: Make sure your API keys are correctly set in the `.env` file
 
-3. **Ollama connection issues**: 
-   - Ensure Ollama is running: `ollama list`
-   - Check if models are pulled: `ollama list`
-   - Verify port 11434 is accessible
-
-4. **Container startup order**: The services have proper dependencies, but if you see connection issues, restart the stack:
+3. **Container startup order**: The services have proper dependencies, but if you see connection issues, restart the stack:
    ```bash
    docker-compose -f docker-compose-multi-llm.yaml down
    docker-compose -f docker-compose-multi-llm.yaml up -d
@@ -182,17 +137,17 @@ Check specific service logs:
 docker-compose -f docker-compose-multi-llm.yaml logs
 
 # Specific AI service
-docker-compose -f docker-compose-multi-llm.yaml logs wren-ai-service-openai
+docker-compose -f docker-compose-multi-llm.yaml logs wren-ai-service-gpt-4.1-mini
 
 # Specific UI
-docker-compose -f docker-compose-multi-llm.yaml logs wren-ui-groq
+docker-compose -f docker-compose-multi-llm.yaml logs wren-ui-gpt-o3
 ```
 
 ## Customization
 
 ### Adding More LLM Providers
 
-1. **Create a new config file** (e.g., `config.anthropic.yaml`)
+1. **Create a new config file** (e.g., `config.new-model.yaml`)
 2. **Add service definitions** to `docker-compose-multi-llm.yaml`
 3. **Update environment variables** in `.env.multi-llm`
 4. **Assign unique ports** for the new services

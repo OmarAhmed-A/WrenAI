@@ -2,8 +2,29 @@ type: llm
 provider: litellm_llm
 timeout: 120
 models:
+  - model: gpt-4.1-nano-2025-04-14
+    context_window_size: 1000000
+    kwargs:
+      max_tokens: 4096
+      n: 1
+      seed: 0
+      temperature: 0
+  - model: gpt-4.1-mini-2025-04-14
+    context_window_size: 1000000
+    kwargs:
+      max_tokens: 4096
+      n: 1
+      seed: 0
+      temperature: 0
+  - model: gpt-4.1-2025-04-14
+    context_window_size: 1000000
+    kwargs:
+      max_tokens: 4096
+      n: 1
+      seed: 0
+      temperature: 0
   - alias: default
-    model: gpt-4o-mini
+    model: gpt-4.1-nano-2025-04-14
     context_window_size: 1000000
     kwargs:
       max_tokens: 4096
@@ -22,7 +43,7 @@ models:
 ---
 type: engine
 provider: wren_ui
-endpoint: http://wren-ui-gpt-4o-mini:3000
+endpoint: http://wren-ui-gpt-o4-mini:3000
 
 ---
 type: engine
