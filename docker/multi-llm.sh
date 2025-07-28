@@ -276,8 +276,32 @@ case $COMMAND in
     start)
         log_info "Starting WrenAI Multi-LLM services..."
         
-        # Start all services - Docker Compose will handle dependencies
-        $COMPOSE_CMD up -d
+        # Phase 1: Start backend services (bootstrap, qdrant, wren-engine, ibis-server)
+        log_info "Phase 1: Starting backend services..."
+        $COMPOSE_CMD up -d bootstrap qdrant wren-engine ibis-server
+        
+        # Phase 2: Start AI services sequentially to avoid Qdrant collection conflicts
+        log_info "Phase 2: Starting AI services sequentially..."
+        
+        log_info "Starting GPT-4.1-mini AI service..."
+        $COMPOSE_CMD up -d wren-ai-service-gpt-4.1-mini
+        sleep 10
+        
+        log_info "Starting GPT-o4-mini AI service..."
+        $COMPOSE_CMD up -d wren-ai-service-gpt-o4-mini
+        sleep 10
+        
+        log_info "Starting GPT-o3 AI service..."
+        $COMPOSE_CMD up -d wren-ai-service-gpt-o3
+        sleep 10
+        
+        log_info "Starting Claude Sonnet 4 AI service..."
+        $COMPOSE_CMD up -d wren-ai-service-claude-sonnet-4
+        sleep 10
+        
+        # Phase 3: Start UI services
+        log_info "Phase 3: Starting UI services..."
+        $COMPOSE_CMD up -d wren-ui-gpt-4.1-mini wren-ui-gpt-o4-mini wren-ui-gpt-o3 wren-ui-claude-sonnet-4
         
         log_success "All services started successfully!"
         echo ""

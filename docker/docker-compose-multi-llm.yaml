@@ -72,7 +72,6 @@ services:
       CONFIG_PATH: /app/config.yaml
       WREN_AI_SERVICE_PORT: ${WREN_AI_SERVICE_PORT_GPT_4_1_MINI}
       QDRANT_HOST: qdrant
-      SHOULD_FORCE_DEPLOY: 0
     env_file:
       - ${PROJECT_DIR}/.env
     volumes:
@@ -99,7 +98,6 @@ services:
       CONFIG_PATH: /app/config.yaml
       WREN_AI_SERVICE_PORT: ${WREN_AI_SERVICE_PORT_GPT_O4_MINI}
       QDRANT_HOST: qdrant
-      SHOULD_FORCE_DEPLOY: 0
     env_file:
       - ${PROJECT_DIR}/.env
     volumes:
@@ -126,7 +124,6 @@ services:
       CONFIG_PATH: /app/config.yaml
       WREN_AI_SERVICE_PORT: ${WREN_AI_SERVICE_PORT_GPT_O3}
       QDRANT_HOST: qdrant
-      SHOULD_FORCE_DEPLOY: 0
     env_file:
       - ${PROJECT_DIR}/.env
     volumes:
@@ -153,7 +150,6 @@ services:
       CONFIG_PATH: /app/config.yaml
       WREN_AI_SERVICE_PORT: ${WREN_AI_SERVICE_PORT_CLAUDE_SONNET_4}
       QDRANT_HOST: qdrant
-      SHOULD_FORCE_DEPLOY: 0
     env_file:
       - ${PROJECT_DIR}/.env
     volumes:
