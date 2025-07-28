@@ -121,29 +121,56 @@ ln -sf "$ENV_FILE" .env
 # Docker Compose command base
 COMPOSE_CMD="docker compose -f docker-compose-multi-llm.yaml"
 
-# Function to check service health
+# Function to check service health or completion
 check_service_health() {
     local service_name="$1"
     local max_attempts=60
     local attempt=1
     
-    log_info "Checking health of $service_name..."
+    log_info "Checking status of $service_name..."
     
-    while [[ $attempt -le $max_attempts ]]; do
-        if $COMPOSE_CMD ps --format json | jq -r ".[] | select(.Service == \"$service_name\") | .Health" | grep -q "healthy"; then
-            log_success "$service_name is healthy"
-            return 0
-        fi
-        
-        if [[ $attempt -eq $max_attempts ]]; then
-            log_error "$service_name failed to become healthy after $max_attempts attempts"
-            return 1
-        fi
-        
-        echo -n "."
-        sleep 5
-        ((attempt++))
-    done
+    # Special handling for bootstrap - check if it completed successfully
+    if [[ "$service_name" == "bootstrap" ]]; then
+        while [[ $attempt -le $max_attempts ]]; do
+            local status=$($COMPOSE_CMD ps --format json | jq -r ".[] | select(.Service == \"$service_name\") | .State")
+            if [[ "$status" == "exited" ]]; then
+                local exit_code=$($COMPOSE_CMD ps --format json | jq -r ".[] | select(.Service == \"$service_name\") | .ExitCode")
+                if [[ "$exit_code" == "0" ]]; then
+                    log_success "$service_name completed successfully"
+                    return 0
+                else
+                    log_error "$service_name exited with code $exit_code"
+                    return 1
+                fi
+            fi
+            
+            if [[ $attempt -eq $max_attempts ]]; then
+                log_error "$service_name failed to complete after $max_attempts attempts"
+                return 1
+            fi
+            
+            echo -n "."
+            sleep 5
+            ((attempt++))
+        done
+    else
+        # Standard health check for other services
+        while [[ $attempt -le $max_attempts ]]; do
+            if $COMPOSE_CMD ps --format json | jq -r ".[] | select(.Service == \"$service_name\") | .Health" | grep -q "healthy"; then
+                log_success "$service_name is healthy"
+                return 0
+            fi
+            
+            if [[ $attempt -eq $max_attempts ]]; then
+                log_error "$service_name failed to become healthy after $max_attempts attempts"
+                return 1
+            fi
+            
+            echo -n "."
+            sleep 5
+            ((attempt++))
+        done
+    fi
 }
 
 # Function to validate container communication
@@ -162,7 +189,7 @@ validate_communication() {
         fi
     done
     
-    # Test health endpoints
+    # Test health endpoints using container names
     local ai_services=("wren-ai-service-gpt-4.1-mini:5555" 
                       "wren-ai-service-gpt-o4-mini:5556"
                       "wren-ai-service-gpt-o3:5557" 
@@ -181,7 +208,7 @@ validate_communication() {
     
     # Test Qdrant connectivity
     log_info "Testing Qdrant connectivity..."
-    if ! docker exec qdrant curl -f "http://localhost:6333/health" > /dev/null 2>&1; then
+    if ! docker exec "wrenai-multi-llm-qdrant-1" curl -f "http://localhost:6333/health" > /dev/null 2>&1; then
         log_error "Qdrant health check failed"
         return 1
     fi
@@ -194,18 +221,50 @@ validate_communication() {
 check_bootstrap() {
     log_info "Checking bootstrap container initialization..."
     
-    # Check if bootstrap completed successfully
-    if ! docker exec bootstrap test -f "/app/data/config.properties"; then
+    # Wait for bootstrap to complete if it's still running
+    local max_attempts=30
+    local attempt=1
+    
+    while [[ $attempt -le $max_attempts ]]; do
+        local status=$($COMPOSE_CMD ps --format json | jq -r ".[] | select(.Service == \"bootstrap\") | .State" 2>/dev/null)
+        
+        if [[ "$status" == "exited" ]]; then
+            local exit_code=$($COMPOSE_CMD ps --format json | jq -r ".[] | select(.Service == \"bootstrap\") | .ExitCode")
+            if [[ "$exit_code" == "0" ]]; then
+                break
+            else
+                log_error "Bootstrap exited with error code $exit_code"
+                return 1
+            fi
+        elif [[ "$status" == "running" ]]; then
+            echo -n "."
+            sleep 2
+            ((attempt++))
+            continue
+        elif [[ -z "$status" ]]; then
+            log_error "Bootstrap container not found"
+            return 1
+        fi
+        
+        if [[ $attempt -eq $max_attempts ]]; then
+            log_error "Bootstrap failed to complete within timeout"
+            return 1
+        fi
+    done
+    
+    # Check if bootstrap completed successfully by verifying created files using volume mount
+    # Since bootstrap container exits, we'll check via another container that has the volume mounted
+    if ! $COMPOSE_CMD exec -T wren-engine test -f "/usr/src/app/etc/config.properties" 2>/dev/null; then
         log_error "Bootstrap initialization incomplete - config.properties not found"
         return 1
     fi
     
-    if ! docker exec bootstrap test -d "/app/data/mdl"; then
+    if ! $COMPOSE_CMD exec -T wren-engine test -d "/usr/src/app/etc/mdl" 2>/dev/null; then
         log_error "Bootstrap initialization incomplete - mdl directory not found"
         return 1
     fi
     
-    if ! docker exec bootstrap test -f "/app/data/mdl/sample.json"; then
+    if ! $COMPOSE_CMD exec -T wren-engine test -f "/usr/src/app/etc/mdl/sample.json" 2>/dev/null; then
         log_error "Bootstrap initialization incomplete - sample.json not found"
         return 1
     fi

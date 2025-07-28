@@ -18,12 +18,6 @@ services:
     command: /bin/sh /app/init.sh
     networks:
       - wren
-    healthcheck:
-      test: ["CMD", "test", "-f", "/app/data/config.properties"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 10s
 
   wren-engine:
     image: ghcr.io/canner/wren-engine:${WREN_ENGINE_VERSION}
@@ -39,7 +33,7 @@ services:
       - wren
     depends_on:
       bootstrap:
-        condition: service_healthy
+        condition: service_completed_successfully
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:${WREN_ENGINE_PORT}/health"]
       interval: 30s
@@ -111,7 +105,7 @@ services:
       - wren
     depends_on:
       bootstrap:
-        condition: service_healthy
+        condition: service_completed_successfully
       qdrant:
         condition: service_healthy
       wren-engine:
@@ -149,7 +143,7 @@ services:
       - wren
     depends_on:
       bootstrap:
-        condition: service_healthy
+        condition: service_completed_successfully
       qdrant:
         condition: service_healthy
       wren-engine:
@@ -187,7 +181,7 @@ services:
       - wren
     depends_on:
       bootstrap:
-        condition: service_healthy
+        condition: service_completed_successfully
       qdrant:
         condition: service_healthy
       wren-engine:
@@ -225,7 +219,7 @@ services:
       - wren
     depends_on:
       bootstrap:
-        condition: service_healthy
+        condition: service_completed_successfully
       qdrant:
         condition: service_healthy
       wren-engine:
