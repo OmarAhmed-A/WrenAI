@@ -154,8 +154,7 @@ const config = {
 
   // question recommendations
   disableQuestionRecommendations:
-    process.env.DISABLE_QUESTION_RECOMMENDATIONS &&
-    process.env.DISABLE_QUESTION_RECOMMENDATIONS.toLowerCase() === 'true',
+    process.env.DISABLE_QUESTION_RECOMMENDATIONS?.toLowerCase() === 'true',
 };
 
 export function getConfig(): IConfig {
