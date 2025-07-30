@@ -522,7 +522,9 @@ export class AskingService implements IAskingService {
     // Skip generating recommendations if disabled
     const config = getConfig();
     if (config.disableQuestionRecommendations) {
-      logger.debug('Question recommendations are disabled, skipping thread recommendation generation');
+      logger.debug(
+        'Question recommendations are disabled, skipping thread recommendation generation',
+      );
       return;
     }
 

@@ -130,7 +130,9 @@ export class ProjectService implements IProjectService {
   public async generateProjectRecommendationQuestions(): Promise<void> {
     // Skip generating recommendations if disabled
     if (config.disableQuestionRecommendations) {
-      logger.debug('Question recommendations are disabled, skipping project recommendation generation');
+      logger.debug(
+        'Question recommendations are disabled, skipping project recommendation generation',
+      );
       return;
     }
 

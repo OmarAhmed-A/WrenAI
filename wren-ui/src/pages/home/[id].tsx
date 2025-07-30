@@ -321,8 +321,12 @@ export default function HomeThread() {
 
   const providerValue = {
     data: thread,
-    recommendedQuestions: isRecommendationsDisabled ? null : recommendedQuestions,
-    showRecommendedQuestions: isRecommendationsDisabled ? false : showRecommendedQuestions,
+    recommendedQuestions: isRecommendationsDisabled
+      ? null
+      : recommendedQuestions,
+    showRecommendedQuestions: isRecommendationsDisabled
+      ? false
+      : showRecommendedQuestions,
     preparation: {
       askingStreamTask: askPrompt.data?.askingStreamTask,
       onStopAskingTask: askPrompt.onStop,
