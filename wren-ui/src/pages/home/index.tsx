@@ -116,6 +116,11 @@ export default function Home() {
     [suggestedQuestionsData],
   );
 
+  const isRecommendationsDisabled = useMemo(
+    () => process.env.NEXT_PUBLIC_DISABLE_QUESTION_RECOMMENDATIONS === 'true',
+    [],
+  );
+
   const onSelectQuestion = async ({ question }) => {
     $prompt.current.submit(question);
   };
@@ -141,7 +146,7 @@ export default function Home() {
         />
       )}
 
-      {!isSampleDataset && (
+      {!isSampleDataset && !isRecommendationsDisabled && (
         <RecommendedQuestionsInstruction
           onSelect={onCreateResponse}
           loading={threadCreating}

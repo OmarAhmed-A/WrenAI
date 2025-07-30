@@ -46,6 +46,9 @@ export interface IConfig {
   projectRecommendationQuestionsMaxQuestions?: number;
   threadRecommendationQuestionMaxCategories?: number;
   threadRecommendationQuestionsMaxQuestions?: number;
+
+  // question recommendations
+  disableQuestionRecommendations?: boolean;
 }
 
 const defaultConfig = {
@@ -148,6 +151,11 @@ const config = {
     .THREAD_RECOMMENDATION_QUESTIONS_MAX_QUESTIONS
     ? parseInt(process.env.THREAD_RECOMMENDATION_QUESTIONS_MAX_QUESTIONS)
     : 1,
+
+  // question recommendations
+  disableQuestionRecommendations:
+    process.env.DISABLE_QUESTION_RECOMMENDATIONS &&
+    process.env.DISABLE_QUESTION_RECOMMENDATIONS.toLowerCase() === 'true',
 };
 
 export function getConfig(): IConfig {

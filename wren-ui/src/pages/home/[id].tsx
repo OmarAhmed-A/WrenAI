@@ -86,6 +86,11 @@ export default function HomeThread() {
   const [showRecommendedQuestions, setShowRecommendedQuestions] =
     useState<boolean>(false);
 
+  const isRecommendationsDisabled = useMemo(
+    () => process.env.NEXT_PUBLIC_DISABLE_QUESTION_RECOMMENDATIONS === 'true',
+    [],
+  );
+
   const [createViewMutation, { loading: creating }] = useCreateViewMutation({
     onError: (error) => console.error(error),
     onCompleted: () => message.success('Successfully created view.'),
@@ -210,6 +215,9 @@ export default function HomeThread() {
   };
 
   const onGenerateThreadRecommendedQuestions = async () => {
+    if (isRecommendationsDisabled) {
+      return;
+    }
     await generateThreadRecommendationQuestions({ variables: { threadId } });
     fetchThreadRecommendationQuestions({ variables: { threadId } });
   };
@@ -255,8 +263,10 @@ export default function HomeThread() {
   // stop all requests when change thread
   useEffect(() => {
     if (threadId !== null) {
-      fetchThreadRecommendationQuestions({ variables: { threadId } });
-      setShowRecommendedQuestions(true);
+      if (!isRecommendationsDisabled) {
+        fetchThreadRecommendationQuestions({ variables: { threadId } });
+        setShowRecommendedQuestions(true);
+      }
     }
     return () => {
       askPrompt.onStopPolling();
@@ -276,7 +286,9 @@ export default function HomeThread() {
   useEffect(() => {
     if (isPollingResponseFinished) {
       threadResponseResult.stopPolling();
-      setShowRecommendedQuestions(true);
+      if (!isRecommendationsDisabled) {
+        setShowRecommendedQuestions(true);
+      }
     }
   }, [isPollingResponseFinished]);
 
@@ -309,8 +321,8 @@ export default function HomeThread() {
 
   const providerValue = {
     data: thread,
-    recommendedQuestions,
-    showRecommendedQuestions,
+    recommendedQuestions: isRecommendationsDisabled ? null : recommendedQuestions,
+    showRecommendedQuestions: isRecommendationsDisabled ? false : showRecommendedQuestions,
     preparation: {
       askingStreamTask: askPrompt.data?.askingStreamTask,
       onStopAskingTask: askPrompt.onStop,

@@ -519,6 +519,13 @@ export class AskingService implements IAskingService {
   public async generateThreadRecommendationQuestions(
     threadId: number,
   ): Promise<void> {
+    // Skip generating recommendations if disabled
+    const config = getConfig();
+    if (config.disableQuestionRecommendations) {
+      logger.debug('Question recommendations are disabled, skipping thread recommendation generation');
+      return;
+    }
+
     const thread = await this.threadRepository.findOneBy({ id: threadId });
     if (!thread) {
       throw new Error(`Thread ${threadId} not found`);
