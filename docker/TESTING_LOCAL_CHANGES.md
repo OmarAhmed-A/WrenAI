@@ -316,6 +316,75 @@ docker-compose -f docker-compose-local.yaml --env-file .env.local down -v
   docker-compose -f docker-compose-local.yaml --env-file .env.local exec wren-ai-service env | grep DISABLE
   ```
 
+**5. "exec /app/entrypoint.sh: no such file or directory" error:**
+
+This error indicates the entrypoint.sh file is missing from the AI service container. Here's how to troubleshoot:
+
+**Step 1: Verify your build context and directory**
+```bash
+# Make sure you're in the correct directory
+cd /path/to/WrenAI/wren-ai-service
+pwd  # Should show .../WrenAI/wren-ai-service
+
+# Verify entrypoint.sh exists
+ls -la entrypoint.sh  # Should show the file with execute permissions
+```
+
+**Step 2: Verify the correct build command**
+```bash
+# From wren-ai-service directory, run:
+docker build -f docker/Dockerfile -t wren-ai-service:local .
+
+# NOT from docker directory! The build context must be wren-ai-service root
+```
+
+**Step 3: Verify the image was built correctly**
+```bash
+# Check that your local image exists
+docker images | grep wren-ai-service
+
+# Test the entrypoint file exists in the built image
+docker run --rm wren-ai-service:local ls -la /app/entrypoint.sh
+```
+
+**Step 4: Verify docker-compose is using the correct image**
+```bash
+# Check your docker-compose-local.yaml file
+grep "wren-ai-service:local" docker-compose-local.yaml
+
+# Should show: image: wren-ai-service:local
+# NOT: image: ghcr.io/canner/wren-ai-service:${WREN_AI_SERVICE_VERSION}
+```
+
+**Step 5: Force rebuild if needed**
+```bash
+# Clean up old images
+docker rmi wren-ai-service:local
+
+# Rebuild with no cache
+cd ../wren-ai-service
+docker build -f docker/Dockerfile -t wren-ai-service:local . --no-cache
+
+# Restart services
+cd ../docker
+docker-compose -f docker-compose-local.yaml --env-file .env.local up -d
+```
+
+**Step 6: Alternative debugging approach**
+```bash
+# Run the container interactively to debug
+docker run -it --rm wren-ai-service:local /bin/bash
+
+# Inside the container, check:
+ls -la /app/
+cat /app/entrypoint.sh
+```
+
+**Most common causes:**
+- Building from wrong directory (must be in `wren-ai-service` directory)
+- docker-compose-local.yaml still referencing remote images instead of local ones
+- Using wrong image tag in docker-compose commands
+
 ### Verification Commands
 
 **Check environment variables in containers:**
