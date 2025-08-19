@@ -16,16 +16,22 @@ RUN poetry install --without dev,eval,test --no-root && rm -rf $POETRY_CACHE_DIR
 
 FROM python:3.12.0-slim-bookworm as runtime
 
-RUN apt-get update && apt install -y netcat-traditional
+# If your entrypoint needs bash, install it; otherwise you can drop 'bash'
+RUN apt-get update && apt-get install -y --no-install-recommends netcat-traditional bash \
+    && rm -rf /var/lib/apt/lists/*
 
 ENV VIRTUAL_ENV=/app/.venv \
     PATH="/app/.venv/bin:$PATH"
 
+WORKDIR /app
+
 COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 
-COPY src src
-COPY entrypoint.sh /app/entrypoint.sh
-COPY pyproject.toml pyproject.toml
-RUN chmod +x /app/entrypoint.sh
+COPY src ./src
+COPY entrypoint.sh ./entrypoint.sh
+COPY pyproject.toml ./pyproject.toml
+
+# Normalize Windows CRLF to LF and make executable
+RUN sed -i 's/\r$//' /app/entrypoint.sh && chmod +x /app/entrypoint.sh
 
 ENTRYPOINT [ "/app/entrypoint.sh" ]
