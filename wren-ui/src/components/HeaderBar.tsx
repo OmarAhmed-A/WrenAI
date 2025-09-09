@@ -41,10 +41,19 @@ export default function HeaderBar() {
     <StyledHeader>
       <div
         className="d-flex justify-space-between align-center"
-        style={{ marginTop: -2 }}
+        style={{ marginTop: -20 }}
       >
         <Space size={[48, 0]}>
-          <LogoBar />
+            <div style={{ 
+              background: 'rgba(255, 255, 255, 0.9)', 
+              borderRadius: '15px', 
+              backdropFilter: 'blur(10px)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              padding: '-2px',
+              display: 'inline-block'
+            }}>
+              <LogoBar />
+            </div>
           {showNav && (
             <Space size={[16, 0]}>
               <StyledButton
