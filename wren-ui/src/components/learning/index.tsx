@@ -7,10 +7,8 @@ import {
   useState,
 } from 'react';
 import { sortBy } from 'lodash';
-import styled from 'styled-components';
 import ReadOutlined from '@ant-design/icons/ReadOutlined';
 import RightOutlined from '@ant-design/icons/RightOutlined';
-import { IterableComponent, makeIterable } from '@/utils/iteration';
 import LearningGuide from '@/components/learning/guide';
 import { LEARNING } from './guide/utils';
 import { useRouter } from 'next/router';
@@ -22,88 +20,6 @@ import {
 import { nextTick } from '@/utils/time';
 import { ProjectLanguage } from '@/apollo/client/graphql/__types__';
 import { useUpdateCurrentProjectMutation } from '@/apollo/client/graphql/settings.generated';
-
-const Progress = styled.div<{ total: number; current: number }>`
-  display: block;
-  border-radius: 999px;
-  height: 6px;
-  width: 100%;
-  background-color: var(--gray-4);
-
-  &::before {
-    content: '';
-    display: block;
-    border-radius: 999px;
-    width: ${({ total, current }) => `${(current / total) * 100}%`};
-    height: 100%;
-    background: linear-gradient(to left, #75eaff, #6150e0);
-    transition: width 0.3s;
-  }
-`;
-
-const CollapseBlock = styled.div`
-  overflow: hidden;
-`;
-
-const PlayIcon = styled.div`
-  position: relative;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background-color: var(--gray-5);
-  &::before {
-    content: '';
-    display: block;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-top: -4px;
-    margin-left: -2px;
-    border-top: 4px solid transparent;
-    border-left: 6px solid var(--gray-8);
-    border-bottom: 4px solid transparent;
-  }
-`;
-
-const List = styled.div<{ finished: boolean }>`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  cursor: pointer;
-  font-size: 12px;
-  color: ${({ finished }) => (finished ? 'var(--gray-6)' : 'var(--gray-8)')};
-  text-decoration: ${({ finished }) => (finished ? 'line-through' : 'none')};
-  padding: 2px 16px;
-
-  &:hover {
-    transition: background-color 0.3s;
-    background-color: var(--gray-4);
-    color: ${({ finished }) => (finished ? 'var(--gray-6)' : 'var(--gray-8)')};
-    text-decoration: ${({ finished }) => (finished ? 'line-through' : 'none')};
-  }
-`;
-
-const ListTemplate = (props: IterableComponent<LearningConfig>) => {
-  const { title, onClick, href, finished } = props;
-  const as = href ? 'a' : 'div';
-  const hrefAttrs = href
-    ? { href, target: '_blank', rel: 'noopener noreferrer' }
-    : {};
-  return (
-    <List
-      className="select-none"
-      finished={finished}
-      onClick={onClick}
-      as={as}
-      {...hrefAttrs}
-    >
-      {title}
-      <PlayIcon />
-    </List>
-  );
-};
-
-const ListIterator = makeIterable(ListTemplate);
 
 interface LearningConfig {
   id: LEARNING;
@@ -163,24 +79,8 @@ const getData = (
   const home = [
     {
       id: LEARNING.SWITCH_PROJECT_LANGUAGE,
-      title: 'Switch the language',
-      onClick: () =>
-        $guide?.current?.play(
-          LEARNING.SWITCH_PROJECT_LANGUAGE,
-          getDispatcher(LEARNING.SWITCH_PROJECT_LANGUAGE),
-        ),
-    },
-    {
-      id: LEARNING.SHARE_RESULTS,
-      title: 'Export to Excel/Sheets',
-      href: 'https://docs.getwren.ai/oss/guide/integrations/excel-add-in',
-      onClick: () => saveRecord(LEARNING.SHARE_RESULTS),
-    },
-    {
-      id: LEARNING.VIEW_FULL_SQL,
-      title: 'View full SQL',
-      href: 'https://docs.getwren.ai/oss/guide/home/answer#view-sqlview-full-sql',
-      onClick: () => saveRecord(LEARNING.VIEW_FULL_SQL),
+      title: 'Feedback form',
+      href: 'https://forms.office.com/Pages/ResponsePage.aspx?id=vVOu1SzcGkmrmE3XaUmBkA0mX3Zhn09KmKyxzYcz8s9UM1pZT1lYVTQ1UEZWSkk2Nk42RThWWExQSy4u',
     },
   ];
 
@@ -239,12 +139,6 @@ export default function SidebarSection(_props: Props) {
       'finished',
     );
   }, [learningRecordResult?.learningRecord]);
-
-  const total = useMemo(() => stories.length, [stories]);
-  const current = useMemo(
-    () => stories.filter((item) => item?.finished).length,
-    [stories],
-  );
 
   const collapseBlock = async (isActive: boolean) => {
     if ($collapseBlock.current) {
@@ -327,38 +221,27 @@ export default function SidebarSection(_props: Props) {
     collapseBlock(active);
   }, [active]);
 
-  const onCollapseBarClick = () => {
-    setActive(!active);
-  };
-
   // Hide learning section if the page not in whitelist
   return (
     <>
       <LearningGuide ref={$guide} />
       {isLearningAccessible(router.pathname) && (
         <div className="border-t border-gray-4">
-          <div
+          <a
+            href="https://forms.office.com/Pages/ResponsePage.aspx?id=vVOu1SzcGkmrmE3XaUmBkA0mX3Zhn09KmKyxzYcz8s9UM1pZT1lYVTQ1UEZWSkk2Nk42RThWWExQSy4u"
+            target="_blank"
+            rel="noopener noreferrer"
             className="px-4 py-1 d-flex align-center cursor-pointer select-none"
-            onClick={onCollapseBarClick}
           >
             <div className="flex-grow-1">
               <ReadOutlined className="mr-1" />
-              Learning
+              Feedback Form
             </div>
             <RightOutlined
               className="text-sm"
               style={{ transform: `rotate(${active ? '90deg' : '0deg'})` }}
             />
-          </div>
-          <CollapseBlock ref={$collapseBlock}>
-            <ListIterator data={stories} />
-            <div className="px-4 py-2 d-flex align-center">
-              <Progress total={total} current={current} />
-              <span className="text-xs gray-6 text-nowrap pl-2">
-                {current}/{total} Finished
-              </span>
-            </div>
-          </CollapseBlock>
+          </a>
         </div>
       )}
     </>
