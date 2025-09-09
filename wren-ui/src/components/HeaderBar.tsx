@@ -41,7 +41,7 @@ export default function HeaderBar() {
     <StyledHeader>
       <div
         className="d-flex justify-space-between align-center"
-        style={{ marginTop: -20 }}
+        style={{ marginTop: -2 }}
       >
         <Space size={[48, 0]}>
             <div style={{ 
