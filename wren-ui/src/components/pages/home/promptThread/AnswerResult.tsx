@@ -41,7 +41,7 @@ const adjustmentType = {
 
 const knowledgeTooltip = (
   <>
-    Store this answer as a Question-SQL pair to help Wren AI improve SQL
+    Store this answer as a Question-SQL pair to help Raisa AI improve SQL
     generation.
     <br />
     <Typography.Link

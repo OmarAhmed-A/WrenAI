@@ -58,7 +58,7 @@ const getThreadResponseIsFinished = (threadResponse: ThreadResponse) => {
   let isAnswerFinished = isBreakdownOnly ? null : false;
   let isChartFinished = null;
 
-  // answerDetail status can be FAILED before getting queryId from Wren AI adapter
+  // answerDetail status can be FAILED before getting queryId from Raisa AI adapter
   if (answerDetail?.queryId || answerDetail?.status) {
     isAnswerFinished = getAnswerIsFinished(answerDetail?.status);
   }

@@ -145,7 +145,7 @@ export default function ManageQuestionSQLPairs() {
         description={
           <>
             On this page, you can manage your saved question-SQL pairs. These
-            pairs help Wren AI learn how your organization writes SQL, allowing
+            pairs help Raisa AI learn how your organization writes SQL, allowing
             it to generate queries that better align with your expectations.{' '}
             <Link
               className="gray-8 underline"

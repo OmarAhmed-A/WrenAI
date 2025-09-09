@@ -1,9 +1,7 @@
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Button } from 'antd';
 import styled from 'styled-components';
 import { Path } from '@/utils/enum';
-import { DiscordIcon, GithubIcon } from '@/utils/icons';
 import SettingOutlined from '@ant-design/icons/SettingOutlined';
 import Home, { Props as HomeSidebarProps } from './Home';
 import Modeling, { Props as ModelingSidebarProps } from './Modeling';
@@ -92,7 +90,7 @@ export default function Sidebar(props: Props) {
           <SettingOutlined className="text-md" />
           Settings
         </StyledButton>
-        <StyledButton type="text" block>
+        {/* <StyledButton type="text" block>
           <Link
             className="d-flex align-center"
             href="https://discord.com/invite/5DvshJqG8Z"
@@ -115,7 +113,7 @@ export default function Sidebar(props: Props) {
           >
             <GithubIcon className="mr-2" style={{ width: 16 }} /> GitHub
           </Link>
-        </StyledButton>
+        </StyledButton> */}
       </div>
     </Layout>
   );
