@@ -5,7 +5,7 @@ import errorHandler from '@/utils/errorHandler';
 const apolloErrorLink = onError((error) => errorHandler(error));
 
 const httpLink = new HttpLink({
-  uri: '/api/graphql',
+  uri: '/datachat/api/graphql',
 });
 
 const client = new ApolloClient({

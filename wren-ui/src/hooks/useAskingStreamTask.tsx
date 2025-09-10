@@ -23,7 +23,7 @@ export default function useAskingStreamTask() {
     reset();
 
     const eventSource = new EventSource(
-      `/api/ask_task/streaming?queryId=${queryId}`,
+      `/datachat/api/ask_task/streaming?queryId=${queryId}`,
     );
 
     eventSource.onmessage = (event) => {

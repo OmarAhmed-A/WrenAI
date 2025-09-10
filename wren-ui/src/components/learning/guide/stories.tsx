@@ -88,7 +88,7 @@ const playDataModelingGuide = (
             <div className="-mx-4" style={{ minHeight: 331 }}>
               <img
                 className="mb-4"
-                src="/images/learning/data-modeling.jpg"
+                src="/datachat/images/learning/data-modeling.jpg"
                 alt="data-modeling-guide"
               />
             </div>
@@ -159,7 +159,7 @@ const playDataModelingGuide = (
             <div className="-mx-4" style={{ minHeight: 175 }}>
               <img
                 className="mb-2"
-                src="/images/learning/edit-model.gif"
+                src="/datachat/images/learning/edit-model.gif"
                 alt="edit-model"
               />
             </div>
@@ -179,7 +179,7 @@ const playDataModelingGuide = (
             <div className="-mx-4" style={{ minHeight: 214 }}>
               <img
                 className="mb-2"
-                src="/images/learning/edit-metadata.gif"
+                src="/datachat/images/learning/edit-metadata.gif"
                 alt="edit-metadata"
               />
             </div>
@@ -205,7 +205,7 @@ const playDataModelingGuide = (
             <div className="-mx-4" style={{ minHeight: 102 }}>
               <img
                 className="mb-2"
-                src="/images/learning/deploy-modeling.jpg"
+                src="/datachat/images/learning/deploy-modeling.jpg"
                 alt="deploy-modeling"
               />
             </div>
@@ -224,7 +224,7 @@ const playDataModelingGuide = (
             <div className="-mx-4" style={{ minHeight: 331 }}>
               <img
                 className="mb-2"
-                src="/images/learning/ask-question.jpg"
+                src="/datachat/images/learning/ask-question.jpg"
                 alt="ask-question"
               />
             </div>
@@ -388,7 +388,7 @@ const playKnowledgeGuide = (
             <div className="-mx-4" style={{ minHeight: 317 }}>
               <img
                 className="mb-4"
-                src="/images/learning/save-to-knowledge.gif"
+                src="/datachat/images/learning/save-to-knowledge.gif"
                 alt="question-sql-pairs-guide"
               />
             </div>
@@ -416,7 +416,7 @@ const playKnowledgeGuide = (
             <div className="-mx-4" style={{ minHeight: 260 }}>
               <img
                 className="mb-4"
-                src="/images/learning/instructions.png"
+                src="/datachat/images/learning/instructions.png"
                 alt="instructions-guide"
               />
             </div>

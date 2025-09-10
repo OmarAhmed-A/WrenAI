@@ -14,7 +14,7 @@ export type UserConfig = {
 
 // Get the user configuration
 export const getUserConfig = async (): Promise<UserConfig> => {
-  const config = await fetch('/api/config').then((res) => res.json());
+  const config = await fetch('/datachat/api/config').then((res) => res.json());
   const decodedTelemetryKey = Buffer.from(
     config.telemetryKey,
     'base64',

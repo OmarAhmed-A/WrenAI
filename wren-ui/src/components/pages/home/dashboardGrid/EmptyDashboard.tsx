@@ -64,15 +64,15 @@ const EmptyDashboard = (props: {
             data={[
               {
                 title: '1. Create a thread',
-                image: '/images/dashboard/s1.jpg',
+                image: '/datachat/images/dashboard/s1.jpg',
               },
               {
                 title: '2. Generate a chart',
-                image: '/images/dashboard/s2.jpg',
+                image: '/datachat/images/dashboard/s2.jpg',
               },
               {
                 title: '3. Pin to dashboard',
-                image: '/images/dashboard/s3.jpg',
+                image: '/datachat/images/dashboard/s3.jpg',
               },
             ]}
           />

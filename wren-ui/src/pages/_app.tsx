@@ -17,7 +17,7 @@ function App({ Component, pageProps }: AppProps) {
     <>
       <Head>
         <title>Raisa AI</title>
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/datachat/favicon.ico" />
       </Head>
       <GlobalConfigProvider>
         <ApolloProvider client={apolloClient}>

@@ -27,7 +27,7 @@ export default function useTextBasedAnswerStreamTask() {
     onReset();
 
     const eventSource = new EventSource(
-      `/api/ask_task/streaming_answer?responseId=${responseId}`,
+      `/datachat/api/ask_task/streaming_answer?responseId=${responseId}`,
     );
 
     eventSource.onmessage = (event) => {

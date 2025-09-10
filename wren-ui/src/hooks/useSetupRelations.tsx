@@ -61,7 +61,7 @@ export default function useSetupRelations() {
   };
 
   const onBack = () => {
-    router.push('/setup/models');
+    router.push('/datachat/setup/models');
   };
 
   const onNext = (data: { relations: SelectedRecommendRelations }) => {
