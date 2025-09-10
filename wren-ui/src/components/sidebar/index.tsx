@@ -77,6 +77,13 @@ export default function Sidebar(props: Props) {
   const router = useRouter();
 
   const onSettingsClick = (event) => {
+    if (router.pathname === Path.APIManagementHistory) {
+      const password = window.prompt('Enter password:');
+      if (password !== 'secretdepass') {
+        alert('Incorrect password');
+        return;
+      }
+    }
     onOpenSettings && onOpenSettings();
     event.target.blur();
   };
@@ -86,10 +93,12 @@ export default function Sidebar(props: Props) {
       <DynamicSidebar {...props} pathname={router.pathname} />
       <LearningSection />
       <div className="border-t border-gray-4 pt-2">
-        <StyledButton type="text" block onClick={onSettingsClick}>
-          <SettingOutlined className="text-md" />
-          Settings
-        </StyledButton>
+        {router.pathname === Path.APIManagementHistory && (
+          <StyledButton type="text" block onClick={onSettingsClick}>
+            <SettingOutlined className="text-md" />
+            Settings
+          </StyledButton>
+        )}
         {/* <StyledButton type="text" block>
           <Link
             className="d-flex align-center"
